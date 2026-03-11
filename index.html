@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deeksha Pandey</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #F5F0E8;
+      --ink: #0F0F0D;
+      --ink-soft: #1C1C1A;
+      --gold: #B07070;
+      --gold-light: #C9938A;
+      --gold-muted: #8A5555;
+      --mid: #6B6558;
+      --rule: #D9D2C4;
+      --white: #FDFAF4;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── T&C GATE ── */
+    #gate {
+      position: fixed;
+      inset: 0;
+      background: var(--ink);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      opacity: 1;
+      transition: opacity 0.6s ease;
+    }
+
+    #gate.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .gate-inner {
+      max-width: 680px;
+      width: 100%;
+      border: 1px solid var(--gold-muted);
+      padding: 3rem 3.5rem;
+      position: relative;
+    }
+
+    .gate-inner::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: -1px;
+      width: 40px; height: 40px;
+      border-top: 2px solid var(--gold);
+      border-left: 2px solid var(--gold);
+    }
+
+    .gate-inner::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; right: -1px;
+      width: 40px; height: 40px;
+      border-bottom: 2px solid var(--gold);
+      border-right: 2px solid var(--gold);
+    }
+
+    .gate-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+
+    .gate-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 2rem;
+    }
+
+    .gate-body {
+      font-size: 0.82rem;
+      color: #A09888;
+      line-height: 1.75;
+      max-height: 38vh;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .gate-body::-webkit-scrollbar { width: 3px; }
+    .gate-body::-webkit-scrollbar-track { background: #1a1a18; }
+    .gate-body::-webkit-scrollbar-thumb { background: var(--gold-muted); }
+
+    .gate-body h3 {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold-muted);
+      margin: 1.2rem 0 0.4rem;
+    }
+
+    .gate-body p { margin-bottom: 0.75rem; }
+
+    .gate-divider {
+      border: none;
+      border-top: 1px solid #2A2A28;
+      margin: 1.5rem 0;
+    }
+
+    .gate-plain {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: #7A7060;
+      font-size: 0.85rem;
+      margin-bottom: 1.75rem;
+    }
+
+    #agree-btn {
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.85rem 2.5rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    #agree-btn:hover {
+      background: var(--gold);
+      color: var(--ink);
+    }
+
+    #agree-btn .arrow { transition: transform 0.25s ease; }
+    #agree-btn:hover .arrow { transform: translateX(4px); }
+
+    /* ── SITE WRAPPER ── */
+    #site {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.6s ease 0.2s;
+    }
+
+    #site.visible {
+      display: block;
+      opacity: 1;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: var(--cream);
+      border-bottom: 1px solid var(--rule);
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-wordmark {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--mid);
+      text-decoration: none;
+      transition: color 0.2s;
+      cursor: pointer;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--ink); }
+
+    .nav-links a.active {
+      border-bottom: 1px solid var(--gold);
+      padding-bottom: 1px;
+    }
+
+    /* hamburger */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--ink);
+      transition: all 0.3s;
+    }
+
+    /* ── VIEWS ── */
+    .view { display: none; padding-top: 60px; }
+    .view.active { display: block; }
+
+    /* ── HERO ── */
+    .hero-banner {
+      width: 100%;
+      background: var(--ink-soft);
+      padding: 4rem 0 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-banner::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: -60px;
+      width: 420px; height: 420px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cg stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.12'%3E%3Cpolygon points='80,20 200,60 280,180 220,300 80,280 20,160'/%3E%3Cpolygon points='120,10 240,50 320,160 260,280 100,270 40,140'/%3E%3Cline x1='80' y1='20' x2='280' y2='180'/%3E%3Cline x1='200' y1='60' x2='20' y2='160'/%3E%3Cline x1='220' y1='300' x2='120' y2='10'/%3E%3Ccircle cx='80' cy='20' r='3' fill='%23ffffff' opacity='0.4'/%3E%3Ccircle cx='200' cy='60' r='3' fill='%23ffffff' opacity='0.4'/%3E%3Ccircle cx='280' cy='180' r='3' fill='%23ffffff' opacity='0.4'/%3E%3Ccircle cx='220' cy='300' r='3' fill='%23ffffff' opacity='0.4'/%3E%3Ccircle cx='80' cy='280' r='3' fill='%23ffffff' opacity='0.4'/%3E%3Ccircle cx='20' cy='160' r='3' fill='%23ffffff' opacity='0.4'/%3E%3C/g%3E%3C/svg%3E") no-repeat left center / contain;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 3rem;
+      position: relative;
+    }
+
+    .hero-tagline {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-headline {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4.5vw, 3rem);
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.2;
+      max-width: 720px;
+    }
+
+    .hero-headline em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    /* ── SECTION LAYOUT ── */
+    .section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 4rem 3rem;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    /* ── PROJECT CARDS ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+    }
+
+    .card {
+      background: var(--cream);
+      padding: 2.5rem 2rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      position: relative;
+    }
+
+    .card:hover { background: var(--white); }
+
+    .card-index {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.6rem;
+      line-height: 1.3;
+    }
+
+    .card-why {
+      font-size: 0.83rem;
+      color: var(--mid);
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--mid);
+      border: 1px solid var(--rule);
+      padding: 0.25rem 0.6rem;
+    }
+
+    .card-cta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: gap 0.2s;
+    }
+
+    .card:hover .card-cta { gap: 0.85rem; }
+
+    /* ── PROJECT DETAIL ── */
+    .project-header {
+      background: var(--ink);
+      padding: 4rem 0 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-header::before {
+      content: '';
+      position: absolute;
+      top: -40px; left: -40px;
+      width: 300px; height: 300px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cg stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.08'%3E%3Cpolygon points='60,15 150,45 210,135 165,225 60,210 15,120'/%3E%3Cline x1='60' y1='15' x2='210' y2='135'/%3E%3Cline x1='150' y1='45' x2='15' y2='120'/%3E%3Ccircle cx='60' cy='15' r='2.5' fill='%23ffffff' opacity='0.5'/%3E%3Ccircle cx='150' cy='45' r='2.5' fill='%23ffffff' opacity='0.5'/%3E%3Ccircle cx='210' cy='135' r='2.5' fill='%23ffffff' opacity='0.5'/%3E%3C/g%3E%3C/svg%3E") no-repeat left center / contain;
+      pointer-events: none;
+    }
+
+    .project-header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 3rem;
+      position: relative;
+    }
+
+    .back-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      transition: color 0.2s, gap 0.2s;
+      border: none;
+      background: none;
+      padding: 0;
+    }
+
+    .back-btn:hover { color: var(--gold); gap: 0.75rem; }
+
+    .project-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .project-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+
+    .project-subtitle {
+      font-size: 0.9rem;
+      color: #8A8070;
+      max-width: 560px;
+      line-height: 1.6;
+    }
+
+    .project-body {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3.5rem 3rem;
+    }
+
+    .project-section-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .project-text {
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+      line-height: 1.8;
+      max-width: 640px;
+      margin-bottom: 2.5rem;
+    }
+
+    .project-rule {
+      border: none;
+      border-top: 1px solid var(--rule);
+      margin: 2.5rem 0;
+    }
+
+    .try-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--ink);
+      color: var(--gold);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.9rem 2rem;
+      text-decoration: none;
+      border: 1px solid var(--ink);
+      transition: all 0.25s;
+    }
+
+    .try-btn:hover {
+      background: var(--gold);
+      color: var(--ink);
+      border-color: var(--gold);
+    }
+
+    .try-btn .arrow { transition: transform 0.25s; }
+    .try-btn:hover .arrow { transform: translateX(4px); }
+
+    .platform-note {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      color: var(--mid);
+      margin-top: 0.75rem;
+    }
+
+    /* ── ABOUT ── */
+    .about-header {
+      background: var(--ink);
+      padding: 4rem 0 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-header::before {
+      content: '';
+      position: absolute;
+      top: -40px; left: -40px;
+      width: 300px; height: 300px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cg stroke='%23ffffff' stroke-width='0.5' fill='none' opacity='0.08'%3E%3Cpolygon points='60,15 150,45 210,135 165,225 60,210 15,120'/%3E%3Cline x1='60' y1='15' x2='210' y2='135'/%3E%3Ccircle cx='60' cy='15' r='2.5' fill='%23ffffff' opacity='0.5'/%3E%3Ccircle cx='150' cy='45' r='2.5' fill='%23ffffff' opacity='0.5'/%3E%3C/g%3E%3C/svg%3E") no-repeat left center / contain;
+      pointer-events: none;
+    }
+
+    .about-header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 3rem;
+      position: relative;
+    }
+
+    .about-body {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3.5rem 3rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .about-text p {
+      font-size: 0.95rem;
+      color: var(--ink-soft);
+      line-height: 1.85;
+      margin-bottom: 1.25rem;
+    }
+
+    .about-text p:last-child { margin-bottom: 0; }
+
+    .about-text em {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: var(--ink);
+    }
+
+    .about-sidebar {}
+
+    .sidebar-block {
+      margin-bottom: 2.5rem;
+    }
+
+    .sidebar-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .sidebar-link {
+      font-size: 0.83rem;
+      color: var(--ink-soft);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 0.4rem;
+      transition: color 0.2s;
+    }
+
+    .sidebar-link:hover { color: var(--gold); }
+
+    .sidebar-text {
+      font-size: 0.83rem;
+      color: var(--mid);
+      line-height: 1.6;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--rule);
+      padding: 2rem 3rem;
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.85rem;
+      color: var(--mid);
+    }
+
+    .footer-copy {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: var(--mid);
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-toggle { display: flex; }
+
+      nav.menu-open .nav-links {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 60px; left: 0; right: 0;
+        background: var(--cream);
+        border-bottom: 1px solid var(--rule);
+        padding: 1.5rem 2rem;
+        gap: 1.5rem;
+      }
+
+      .hero-content,
+      .section,
+      .project-header-inner,
+      .project-body,
+      .about-header-inner,
+      .about-body,
+      footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+
+      .cards-grid { grid-template-columns: 1fr; }
+
+      .about-body {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .gate-inner { padding: 2rem 1.75rem; }
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up {
+      animation: fadeUp 0.6s ease forwards;
+      opacity: 0;
+    }
+
+    .fade-up-1 { animation-delay: 0.05s; }
+    .fade-up-2 { animation-delay: 0.15s; }
+    .fade-up-3 { animation-delay: 0.25s; }
+    .fade-up-4 { animation-delay: 0.35s; }
+    .fade-up-5 { animation-delay: 0.45s; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════ T&C GATE ══════════════════ -->
+<div id="gate">
+  <div class="gate-inner">
+    <div class="gate-label">Before You Enter</div>
+    <h1 class="gate-title">This work belongs<br>to <em style="font-style:italic;color:var(--gold-light)">Deeksha Pandey.</em></h1>
+
+    <div class="gate-body">
+      <p>Everything you're about to see — the tools, the dashboards, the concepts, the design, the architecture — was built by Deeksha Pandey and belongs to her.</p>
+
+      <h3>On AI Assistance</h3>
+      <p>The tools and dashboards in this portfolio were built in collaboration with AI coding assistants. The ideas, architecture, domain expertise, and governance thinking behind them are entirely my own. I direct, I design, I decide — AI executes. If anything, that's the point: demonstrating what becomes possible when domain knowledge meets AI capability.</p>
+
+      <h3>What You Can Do</h3>
+      <p>You're welcome to explore, interact with, and reference this work. If you cite or mention it anywhere, please attribute it to Deeksha Pandey with a link back to this portfolio.</p>
+
+      <h3>What You Cannot Do</h3>
+      <p>You may not copy, reproduce, redistribute, or build derivative works from anything on this site — whether that's code, design, concepts, or architecture — without Deeksha's explicit written permission. Screenshots for personal reference are fine. Passing this work off as your own is not.</p>
+
+      <h3>A Note on the Tools</h3>
+      <p>The C4I Dashboard is a research reference implementation only — not a live system, not connected to any classified data. Nyaya-Sāra provides general information about Indian law and is not a substitute for legal advice from a qualified professional.</p>
+
+      <hr class="gate-divider" />
+      <p class="gate-plain" style="margin-bottom:0;font-family:'Playfair Display',serif;font-style:italic;color:#7A7060;font-size:0.85rem;">Look, learn, cite. Don't copy.</p>
+    </div>
+
+    <button id="agree-btn">
+      I Agree <span class="arrow">→</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════ SITE ══════════════════ -->
+<div id="site">
+
+  <!-- NAV -->
+  <nav id="main-nav">
+    <span class="nav-wordmark" onclick="showView('home')">Deeksha Pandey</span>
+    <ul class="nav-links" id="nav-links">
+      <li><a onclick="showView('home')" data-view="home" class="active">Home</a></li>
+      <li><a onclick="showView('home'); scrollToProjects()" data-view="projects">Projects</a></li>
+      <li><a onclick="showView('about')" data-view="about">About</a></li>
+    </ul>
+    <div class="nav-toggle" id="nav-toggle" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- ══ HOME VIEW ══ -->
+  <div id="view-home" class="view active">
+    <!-- Hero Banner -->
+    <div class="hero-banner">
+      <div class="hero-content">
+        <div class="hero-tagline fade-up fade-up-1">AI Governance × Systems Design × Humanitarian Infrastructure</div>
+        <h1 class="hero-headline fade-up fade-up-2">
+          Designing systems where<br><em>access scales</em> and<br><em>accountability compounds.</em>
+        </h1>
+      </div>
+    </div>
+
+    <!-- Project Cards -->
+    <div class="section" id="projects-anchor">
+      <div class="section-label">Selected Work</div>
+      <div class="cards-grid">
+
+        <div class="card fade-up fade-up-2" data-project="c4i">
+          <div class="card-index">01 — C4I Dashboard</div>
+          <h2 class="card-title">Pravaah C4I Governance Dashboard</h2>
+          <p class="card-why">Built to demonstrate that AI in high-risk national security contexts can be governed with restraint and accountability built in.</p>
+          <div class="card-tags">
+            <span class="tag">AI Governance</span>
+            <span class="tag">National Security</span>
+            <span class="tag">Restraint Index</span>
+          </div>
+          <span class="card-cta">View Project <span class="arrow">→</span></span>
+        </div>
+
+        <div class="card fade-up fade-up-3" data-project="nyaya">
+          <div class="card-index">02 — Nyaya-Sāra</div>
+          <h2 class="card-title">Nyaya-Sāra</h2>
+          <p class="card-why">Built because ordinary people shouldn't need a lawyer to know their rights.</p>
+          <div class="card-tags">
+            <span class="tag">Legal Access</span>
+            <span class="tag">BNS / BNSS / BSA</span>
+            <span class="tag">Gemini</span>
+          </div>
+          <span class="card-cta">View Project <span class="arrow">→</span></span>
+        </div>
+
+        <div class="card fade-up fade-up-4" data-project="cricket">
+          <div class="card-index">03 — The Cricket Club</div>
+          <h2 class="card-title">The Cricket Club</h2>
+          <p class="card-why">Built out of curiosity about how learning design works.</p>
+          <div class="card-tags">
+            <span class="tag">Learning Design</span>
+            <span class="tag">Spaced Repetition</span>
+            <span class="tag">180+ Terms</span>
+          </div>
+          <span class="card-cta">View Project <span class="arrow">→</span></span>
+        </div>
+
+        <div class="card fade-up fade-up-5" data-project="closer">
+          <div class="card-index">04 — CLOSER</div>
+          <h2 class="card-title">CLOSER</h2>
+          <p class="card-why">Built while watching Suits eating a red velvet cupcake.</p>
+          <div class="card-tags">
+            <span class="tag">Professional Development</span>
+            <span class="tag">Simulation</span>
+            <span class="tag">Claude Artifact</span>
+          </div>
+          <span class="card-cta">View Project <span class="arrow">→</span></span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <span class="footer-name">Deeksha Pandey</span>
+      <span class="footer-copy">© 2026 — All rights reserved</span>
+    </footer>
+  </div>
+
+  <!-- ══ PROJECT VIEWS ══ -->
+
+  <!-- C4I -->
+  <div id="view-c4i" class="view">
+    <div class="project-header">
+      <div class="project-header-inner">
+        <button class="back-btn" onclick="showView('home')"><span>←</span> All Projects</button>
+        <div class="project-num">01 — AI Governance</div>
+        <h1 class="project-title">Pravaah C4I<br>Governance Dashboard</h1>
+        <p class="project-subtitle">A research reference implementation for accountable AI in national security command-and-control.</p>
+      </div>
+    </div>
+    <div class="project-body">
+      <div class="project-section-title">Why I Built This</div>
+      <p class="project-text">Built to demonstrate that AI in high-risk, dual-use contexts can be governed with restraint and accountability built in. The central argument is that governance doesn't have to be bolted on after the fact — it can be structural. In contexts where AI systems carry consequential, potentially irreversible weight, the question of how accountability gets designed in is not a compliance question. It's an architecture question. This dashboard is an attempt to answer it.</p>
+
+      <hr class="project-rule" />
+
+      <div class="project-section-title">What It Does</div>
+      <p class="project-text">The dashboard models a C4I (Command, Control, Communications, Computers, and Intelligence) governance environment. It includes an AI Restraint Index that scores system behaviour against accountability criteria, fairness auditing, legal bundle generation for audit trails, and a humanitarian oversight layer that flags decisions with civilian impact. The design is deliberately editorial — governance made legible, not buried in logs.</p>
+
+      <hr class="project-rule" />
+
+      <div class="project-section-title">A Note</div>
+      <p class="project-text">This is a research reference implementation only. It is not connected to any live system or classified data. It is a demonstration of what accountable AI infrastructure could look like — not what any existing system looks like.</p>
+
+      <a href="https://pravaah-c4i.vercel.app/" target="_blank" class="try-btn">
+        Try It <span class="arrow">→</span>
+      </a>
+      <div class="platform-note">Deployed on Vercel</div>
+    </div>
+    <footer>
+      <span class="footer-name">Deeksha Pandey</span>
+      <span class="footer-copy">© 2026 — All rights reserved</span>
+    </footer>
+  </div>
+
+  <!-- NYAYA -->
+  <div id="view-nyaya" class="view">
+    <div class="project-header">
+      <div class="project-header-inner">
+        <button class="back-btn" onclick="showView('home')"><span>←</span> All Projects</button>
+        <div class="project-num">02 — Legal Access</div>
+        <h1 class="project-title">Nyaya-Sāra</h1>
+        <p class="project-subtitle">Plain-language access to Indian law — BNS, BNSS, and BSA — for people who need to know their rights.</p>
+      </div>
+    </div>
+    <div class="project-body">
+      <div class="project-section-title">Why I Built This</div>
+      <p class="project-text">Built because ordinary people shouldn't need a lawyer to know their rights. India's criminal law underwent a wholesale recodification in 2023 — the Indian Penal Code became the Bharatiya Nyaya Sanhita (BNS), the Code of Criminal Procedure became the Bharatiya Nagarik Suraksha Sanhita (BNSS), and the Indian Evidence Act became the Bharatiya Sakshya Adhiniyam (BSA). The statutes are now new, the awareness is not. Nyaya-Sāra sits in that gap: it translates statute into plain language for anyone who needs to understand what the law says about their situation.</p>
+
+      <hr class="project-rule" />
+
+      <div class="project-section-title">What It Does</div>
+      <p class="project-text">Nyaya-Sāra is a conversational tool built on Gemini that lets users ask questions about Indian law in natural language and receive answers grounded in the actual text of BNS, BNSS, and BSA — as well as the Fundamental Rights enshrined in the Constitution of India and landmark judgements by the Supreme Court. It is not a legal advice service — it is a legal literacy tool. The distinction matters: it tells you what the law says, clearly and accessibly.</p>
+
+      <a href="https://g.co/gemini/share/6b9dbd4f1da3" target="_blank" class="try-btn">
+        Try It on Gemini <span class="arrow">→</span>
+      </a>
+      <div class="platform-note">Live on Google Gemini — opens in native environment</div>
+    </div>
+    <footer>
+      <span class="footer-name">Deeksha Pandey</span>
+      <span class="footer-copy">© 2026 — All rights reserved</span>
+    </footer>
+  </div>
+
+  <!-- CRICKET -->
+  <div id="view-cricket" class="view">
+    <div class="project-header">
+      <div class="project-header-inner">
+        <button class="back-btn" onclick="showView('home')"><span>←</span> All Projects</button>
+        <div class="project-num">03 — Learning Design</div>
+        <h1 class="project-title">The Cricket Club</h1>
+        <p class="project-subtitle">A friendly, approachable cricket learning app with 180+ terms and spaced repetition.</p>
+      </div>
+    </div>
+    <div class="project-body">
+      <div class="project-section-title">Why I Built This</div>
+      <p class="project-text">Built out of curiosity about how learning design works. Cricket has a vocabulary problem: the sport is enormous, the terminology is dense, and most people who love it learned by osmosis. The Cricket Club is an experiment in whether you can build something genuinely fun and well-scaffolded — not a quiz, not a glossary, but a learning environment that respects the intelligence of the person using it. Spaced repetition does a lot of the heavy lifting. The tone does the rest.</p>
+
+      <hr class="project-rule" />
+
+      <div class="project-section-title">What It Does</div>
+      <p class="project-text">180+ cricket terms, organised and surfaced through spaced repetition so the things you don't know keep coming back until you do. Designed to be friendly without being condescending — approachable for a complete newcomer, still useful for someone filling in gaps. The aesthetic is warm and low-stakes on purpose.</p>
+
+      <a href="https://the-cricket-club.vercel.app/" target="_blank" class="try-btn">
+        Try It <span class="arrow">→</span>
+      </a>
+      <div class="platform-note">Deployed on Vercel</div>
+    </div>
+    <footer>
+      <span class="footer-name">Deeksha Pandey</span>
+      <span class="footer-copy">© 2026 — All rights reserved</span>
+    </footer>
+  </div>
+
+  <!-- CLOSER -->
+  <div id="view-closer" class="view">
+    <div class="project-header">
+      <div class="project-header-inner">
+        <button class="back-btn" onclick="showView('home')"><span>←</span> All Projects</button>
+        <div class="project-num">04 — Professional Simulation</div>
+        <h1 class="project-title">CLOSER</h1>
+        <p class="project-subtitle">Play the room. Learn the move.</p>
+      </div>
+    </div>
+    <div class="project-body">
+      <div class="project-section-title">Why I Built This</div>
+      <p class="project-text">Built while watching Suits eating a red velvet cupcake. The premise was simple: what if you could practice high-stakes professional conversations — negotiations, difficult feedback, room-reading — with the most demanding coaches imaginable? Harvey Specter has no patience for bad framing. Donna sees through everything. Jessica Pearson sets the standard and doesn't lower it. CLOSER puts you in the room with them and makes you earn your way through.</p>
+
+      <hr class="project-rule" />
+
+      <div class="project-section-title">What It Does</div>
+      <p class="project-text">A professional development simulator built as a Claude artifact. You choose your scenario, you make your moves, and you get feedback from Harvey, Mike, Donna, and Jessica — each with a distinct lens and a distinct tolerance for weakness. The bigger vision is a multi-show persona-building platform. For now: Suits. The room is yours. Don't waste it.</p>
+
+      <a href="https://claude.ai/public/artifacts/610de0b3-67c5-4ca3-8aae-dbb1ec010dc2" target="_blank" class="try-btn">
+        Try It on Claude <span class="arrow">→</span>
+      </a>
+      <div class="platform-note">Live as a Claude.ai artifact — opens in native environment</div>
+    </div>
+    <footer>
+      <span class="footer-name">Deeksha Pandey</span>
+      <span class="footer-copy">© 2026 — All rights reserved</span>
+    </footer>
+  </div>
+
+  <!-- ══ ABOUT VIEW ══ -->
+  <div id="view-about" class="view">
+    <div class="about-header">
+      <div class="about-header-inner">
+        <div class="project-num fade-up fade-up-1">About</div>
+        <h1 class="project-title fade-up fade-up-2">Deeksha Pandey</h1>
+        <p class="project-subtitle fade-up fade-up-3">Senior Editor. Systems thinker. Building at the intersection of AI and governance.</p>
+      </div>
+    </div>
+
+    <div class="about-body">
+      <div class="about-text">
+        <p>I'm a Senior Editor at Nielsen with a Master's in International Relations focused on forced migration. For the past year I've been building at the intersection of AI and governance — not as a technologist, but as someone who thinks about systems, accountability, and who gets left out when infrastructure fails.</p>
+
+        <p>The pivot isn't a career change so much as a clarification. The same questions that drove my research on displacement — <em>who has power, who bears risk, who gets access</em> — turn out to be exactly the right questions to ask about AI. So I started building tools that demonstrate what that thinking looks like in practice: governance frameworks for high-risk AI deployment, legal access tools for people who can't afford lawyers, learning infrastructure for knowledge that's gatekept by jargon.</p>
+
+        <p>The four projects in this portfolio are two sides of the same argument. The C4I Dashboard works top-down: if you're going to deploy AI in consequential contexts, accountability has to be structural, not aspirational. Nyaya-Sāra, The Cricket Club, and CLOSER work bottom-up: access should scale, and the tools that enable it should be genuinely good.</p>
+
+        <p><em>My current focus is AI governance and policy — the question of how the rules get written, and whether they'll hold.</em></p>
+      </div>
+
+      <div class="about-sidebar">
+        <div class="sidebar-block">
+          <div class="sidebar-label">Contact</div>
+          <a href="/cdn-cgi/l/email-protection#462223232d352e276836272822233f77757106212b272f2a6825292b" class="sidebar-link"><span class="__cf_email__" data-cfemail="7e1a1b1b150d161f500e1f101a1b074f4d493e19131f1712501d1113">[email&#160;protected]</span></a>
+          <a href="https://linkedin.com/in/deekshapandey137" target="_blank" class="sidebar-link">LinkedIn ↗</a>
+        </div>
+
+        <div class="sidebar-block">
+          <div class="sidebar-label">Background</div>
+          <p class="sidebar-text">Senior Editor, Nielsen<br>MA International Relations<br>Forced Migration focus</p>
+        </div>
+
+        <div class="sidebar-block">
+          <div class="sidebar-label">Focus Areas</div>
+          <p class="sidebar-text">AI Governance<br>Policy & Regulation<br>Humanitarian Infrastructure<br>Systems Design</p>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <span class="footer-name">Deeksha Pandey</span>
+      <span class="footer-copy">© 2026 — All rights reserved</span>
+    </footer>
+  </div>
+
+</div><!-- /site -->
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+
+    const views = ['home', 'c4i', 'nyaya', 'cricket', 'closer', 'about'];
+
+    function enterSite() {
+      const gate = document.getElementById('gate');
+      const site = document.getElementById('site');
+      gate.classList.add('fade-out');
+      site.style.display = 'block';
+      setTimeout(function() {
+        gate.style.display = 'none';
+        site.style.opacity = '1';
+      }, 700);
+    }
+
+    function showView(name) {
+      views.forEach(function(v) {
+        document.getElementById('view-' + v).classList.remove('active');
+      });
+      document.getElementById('view-' + name).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.querySelectorAll('.nav-links a').forEach(function(a) {
+        a.classList.remove('active');
+        if (name === 'about' && a.dataset.view === 'about') a.classList.add('active');
+        if (name !== 'about' && a.dataset.view === 'home') a.classList.add('active');
+      });
+      document.getElementById('main-nav').classList.remove('menu-open');
+    }
+
+    function scrollToProjects() {
+      setTimeout(function() {
+        var el = document.getElementById('projects-anchor');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
+    }
+
+    // Gate button
+    document.getElementById('agree-btn').addEventListener('click', enterSite);
+
+    // Nav wordmark
+    document.querySelector('.nav-wordmark').addEventListener('click', function() { showView('home'); });
+
+    // Nav links
+    document.querySelectorAll('.nav-links a').forEach(function(a) {
+      a.addEventListener('click', function() {
+        var v = a.dataset.view;
+        if (v === 'projects') { showView('home'); scrollToProjects(); }
+        else showView(v);
+      });
+    });
+
+    // Project cards
+    document.querySelectorAll('.card').forEach(function(card) {
+      card.addEventListener('click', function() { showView(card.dataset.project); });
+    });
+
+    // Back buttons
+    document.querySelectorAll('.back-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() { showView('home'); });
+    });
+
+    // Mobile menu toggle
+    document.getElementById('nav-toggle').addEventListener('click', function() {
+      document.getElementById('main-nav').classList.toggle('menu-open');
+    });
+
+  });
+</script>
+</body>
+</html>
